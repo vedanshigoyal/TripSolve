@@ -1,0 +1,70 @@
+# Production stack for a single server (AWS EC2).
+#   cp deploy/.env.prod.example .env    # fill in secrets
+#   docker compose -f docker-compose.prod.yml up -d --build
+#
+# Only Caddy is reachable from outside (80/443). It serves the Next.js site and forwards
+# /api/* to FastAPI, so the browser talks to one origin and no CORS is needed.
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: tripsolve
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: tripsolve
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      # TCP check: during first-boot init PostGIS runs a socket-only temporary server,
+      # which a plain pg_isready would report as ready too early.
+      test: ["CMD-SHELL", "pg_isready -U tripsolve -h 127.0.0.1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg://tripsolve:${POSTGRES_PASSWORD}@db:5432/tripsolve
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      LLM_MODEL: ${LLM_MODEL:-openai/gpt-oss-120b}
+      LLM_REASONING_EFFORT: ${LLM_REASONING_EFFORT:-low}
+      OSRM_URL: ${OSRM_URL:-https://router.project-osrm.org}
+      SOLVER_TIME_LIMIT_SECONDS: ${SOLVER_TIME_LIMIT_SECONDS:-2}
+      CORS_ORIGINS: https://${SITE_HOST}
+    # --root-path makes /api/docs work behind Caddy's /api prefix.
+    command: >
+      sh -c "python -m seed.seed &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000 --root-path /api --proxy-headers --forwarded-allow-ips='*'"
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API_URL: /api
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on: [backend, frontend]
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      SITE_HOST: ${SITE_HOST:?set SITE_HOST in .env}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  pgdata:
+  caddy_data:
+  caddy_config:

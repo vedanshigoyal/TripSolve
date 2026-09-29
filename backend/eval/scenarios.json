@@ -1,0 +1,51 @@
+[
+  {
+    "name": "solo-heritage-day",
+    "description": "Solo heritage lover, full day, must see Amber Fort",
+    "request": {"date": "2026-10-06", "start_time": "09:00", "end_time": "18:00",
+                "start_location": {"lat": 26.9196, "lon": 75.7878, "label": "Jaipur Junction"},
+                "members": [{"name": "Solo", "interests": {"heritage": 5, "fort": 5, "palace": 4}, "must_visit_slugs": ["amber-fort"]}]}
+  },
+  {
+    "name": "tight-temple-morning",
+    "description": "Early start, temples with split opening hours, back by 12:30",
+    "request": {"date": "2026-10-07", "start_time": "07:30", "end_time": "12:30",
+                "start_location": {"lat": 26.9061, "lon": 75.8062, "label": "C-Scheme hotel"},
+                "members": [{"name": "Solo", "interests": {"religious": 5, "heritage": 3}, "must_visit_slugs": ["birla-mandir", "govind-dev-ji", "moti-dungri"]}]}
+  },
+  {
+    "name": "monday-museums",
+    "description": "Museum day on a Monday (Anokhi Museum is closed Mondays)",
+    "request": {"date": "2026-10-05", "start_time": "10:00", "end_time": "17:00",
+                "start_location": {"lat": 26.9239, "lon": 75.8267, "label": "Old City"},
+                "members": [{"name": "Solo", "interests": {"museum": 5, "crafts": 4, "art": 3}, "must_visit_slugs": ["anokhi-museum", "albert-hall-museum"]}]}
+  },
+  {
+    "name": "afternoon-evening",
+    "description": "Afternoon to late evening: bazaars, night museum, Chokhi Dhani dinner",
+    "request": {"date": "2026-10-08", "start_time": "14:00", "end_time": "23:00", "return_to_start": false,
+                "start_location": {"lat": 26.9061, "lon": 75.8062, "label": "C-Scheme hotel"},
+                "members": [{"name": "Solo", "interests": {"food": 5, "shopping": 4, "evening": 5, "culture": 4}, "must_visit_slugs": ["chokhi-dhani"]}]}
+  },
+  {
+    "name": "group-of-three",
+    "description": "Three friends with conflicting interests",
+    "request": {"date": "2026-10-10", "start_time": "09:30", "end_time": "19:00",
+                "start_location": {"lat": 26.9196, "lon": 75.7878, "label": "Jaipur Junction"},
+                "members": [
+                  {"name": "Asha", "interests": {"fort": 5, "heritage": 4, "photography": 3}},
+                  {"name": "Ravi", "interests": {"food": 5, "shopping": 4}},
+                  {"name": "Meera", "interests": {"museum": 5, "art": 4, "religious": 2}, "avoid_slugs": ["world-trade-park"]}
+                ]}
+  },
+  {
+    "name": "two-day-family",
+    "description": "Two-day family trip, return to hotel each evening",
+    "request": {"date": "2026-10-10", "days": 2, "start_time": "09:00", "end_time": "18:30",
+                "start_location": {"lat": 26.9061, "lon": 75.8062, "label": "C-Scheme hotel"},
+                "members": [
+                  {"name": "Parent", "interests": {"heritage": 5, "religious": 4}, "must_visit_slugs": ["amber-fort"]},
+                  {"name": "Teen", "interests": {"fort": 4, "entertainment": 5, "food": 4}, "must_visit_slugs": ["wax-museum"]}
+                ]}
+  }
+]

@@ -1,0 +1,6 @@
+# LF everywhere: the code runs in Linux containers, and shell scripts break on CRLF.
+* text=auto eol=lf
+*.pdf binary
+*.pptx binary
+*.png binary
+*.ico binary

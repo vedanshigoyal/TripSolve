@@ -1,0 +1,14 @@
+# Caddy obtains and renews a Let's Encrypt certificate for SITE_HOST automatically.
+{$SITE_HOST} {
+	encode gzip
+
+	# FastAPI: /api/plan -> backend:8000/plan
+	handle_path /api/* {
+		reverse_proxy backend:8000
+	}
+
+	# Everything else: the Next.js app
+	handle {
+		reverse_proxy frontend:3000
+	}
+}
